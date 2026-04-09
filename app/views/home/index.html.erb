@@ -1,0 +1,12 @@
+<% content_for :title, "Welcome" %>
+
+<div class="container py-5 text-center">
+  <h1 class="display-4 mb-3">Welcome</h1>
+  <p class="lead text-muted mb-4">Your new Rails application is ready.</p>
+
+  <% if user_signed_in? %>
+    <p class="text-muted">Signed in as <%= current_user.name %></p>
+  <% else %>
+    <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary btn-lg" %>
+  <% end %>
+</div>
