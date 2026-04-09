@@ -914,45 +914,47 @@ after_bundle do
     }
   SCSS
 
-  # Update database.yml with PostgreSQL credentials
-  remove_file "config/database.yml"
-  create_file "config/database.yml", <<~YAML
-    default: &default
-      adapter: postgresql
-      encoding: unicode
-      max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  # Update database.yml with PostgreSQL credentials (only if PostgreSQL is selected)
+  if options[:database] == "postgresql"
+    remove_file "config/database.yml"
+    create_file "config/database.yml", <<~YAML
+      default: &default
+        adapter: postgresql
+        encoding: unicode
+        max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-    development:
-      <<: *default
-      database: <%= app_name %>_development
-      username: <%= ENV.fetch("POSTGRES_USER") { "postgres" } %>
-      password: <%= ENV.fetch("POSTGRES_PASSWORD") { "postgres" } %>
-
-    test:
-      <<: *default
-      database: <%= app_name %>_test
-      username: <%= ENV.fetch("POSTGRES_USER") { "postgres" } %>
-      password: <%= ENV.fetch("POSTGRES_PASSWORD") { "postgres" } %>
-
-    production:
-      primary: &primary_production
+      development:
         <<: *default
-        database: <%= app_name %>_production
-        username: <%= app_name %>
-        password: <%= ENV["<%= app_name.upcase %>_DATABASE_PASSWORD"] %>
-      cache:
-        <<: *primary_production
-        database: <%= app_name %>_production_cache
-        migrations_paths: db/cache_migrate
-      queue:
-        <<: *primary_production
-        database: <%= app_name %>_production_queue
-        migrations_paths: db/queue_migrate
-      cable:
-        <<: *primary_production
-        database: <%= app_name %>_production_cable
-        migrations_paths: db/cable_migrate
-  YAML
+        database: <%= app_name %>_development
+        username: <%= ENV.fetch("POSTGRES_USER") { "postgres" } %>
+        password: <%= ENV.fetch("POSTGRES_PASSWORD") { "postgres" } %>
+
+      test:
+        <<: *default
+        database: <%= app_name %>_test
+        username: <%= ENV.fetch("POSTGRES_USER") { "postgres" } %>
+        password: <%= ENV.fetch("POSTGRES_PASSWORD") { "postgres" } %>
+
+      production:
+        primary: &primary_production
+          <<: *default
+          database: <%= app_name %>_production
+          username: <%= app_name %>
+          password: <%= ENV["<%= app_name.upcase %>_DATABASE_PASSWORD"] %>
+        cache:
+          <<: *primary_production
+          database: <%= app_name %>_production_cache
+          migrations_paths: db/cache_migrate
+        queue:
+          <<: *primary_production
+          database: <%= app_name %>_production_queue
+          migrations_paths: db/queue_migrate
+        cable:
+          <<: *primary_production
+          database: <%= app_name %>_production_cable
+          migrations_paths: db/cable_migrate
+    YAML
+  end
 
   # Run database setup
   rails_command "db:create"
