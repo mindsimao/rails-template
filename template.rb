@@ -20,7 +20,7 @@ after_bundle do
   rails_command "importmap:install"
   
   # Copy configuration files
-  copy_file_or_create ".rubocop.yml", <<~YAML
+  create_file ".rubocop.yml", <<~YAML
     require:
       - rubocop-rails-omakase
     
@@ -33,13 +33,13 @@ after_bundle do
         - 'db/schema.rb'
   YAML
 
-  copy_file_or_create "config/bundler-audit.yml", <<~YAML
+  create_file "config/bundler-audit.yml", <<~YAML
     # Ignore list for bundler-audit
     # Format:
     # - CVE-YYYY-NNNNN
   YAML
 
-  copy_file_or_create "config/recurring.yml", <<~YAML
+  create_file "config/recurring.yml", <<~YAML
     # Recurring jobs configuration for Solid Queue
     # 
     # Example:
@@ -930,10 +930,4 @@ after_bundle do
   say
 end
 
-def copy_file_or_create(path, content)
-  if File.exist?(path)
-    copy_file path
-  else
-    create_file path, content
-  end
-end
+
