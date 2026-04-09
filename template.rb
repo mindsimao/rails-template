@@ -921,37 +921,37 @@ after_bundle do
       default: &default
         adapter: postgresql
         encoding: unicode
-        max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+        max_connections: <%%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
       development:
         <<: *default
-        database: <%= app_name %>_development
-        username: <%= ENV.fetch("POSTGRES_USER") { "postgres" } %>
-        password: <%= ENV.fetch("POSTGRES_PASSWORD") { "postgres" } %>
+        database: #{app_name}_development
+        username: <%%= ENV.fetch("POSTGRES_USER") { "postgres" } %>
+        password: <%%= ENV.fetch("POSTGRES_PASSWORD") { "postgres" } %>
 
       test:
         <<: *default
-        database: <%= app_name %>_test
-        username: <%= ENV.fetch("POSTGRES_USER") { "postgres" } %>
-        password: <%= ENV.fetch("POSTGRES_PASSWORD") { "postgres" } %>
+        database: #{app_name}_test
+        username: <%%= ENV.fetch("POSTGRES_USER") { "postgres" } %>
+        password: <%%= ENV.fetch("POSTGRES_PASSWORD") { "postgres" } %>
 
       production:
         primary: &primary_production
           <<: *default
-          database: <%= app_name %>_production
-          username: <%= app_name %>
-          password: <%= ENV["<%= app_name.upcase %>_DATABASE_PASSWORD"] %>
+          database: #{app_name}_production
+          username: #{app_name}
+          password: <%%= ENV["#{app_name.upcase}_DATABASE_PASSWORD"] %>
         cache:
           <<: *primary_production
-          database: <%= app_name %>_production_cache
+          database: #{app_name}_production_cache
           migrations_paths: db/cache_migrate
         queue:
           <<: *primary_production
-          database: <%= app_name %>_production_queue
+          database: #{app_name}_production_queue
           migrations_paths: db/queue_migrate
         cable:
           <<: *primary_production
-          database: <%= app_name %>_production_cable
+          database: #{app_name}_production_cable
           migrations_paths: db/cable_migrate
     YAML
   end
