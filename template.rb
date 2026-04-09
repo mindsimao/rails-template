@@ -917,7 +917,7 @@ after_bundle do
   # Update database.yml with PostgreSQL credentials (only if PostgreSQL is selected)
   if options[:database] == "postgresql"
     remove_file "config/database.yml"
-    create_file "config/database.yml", <<~YAML
+    create_file "config/database.yml", <<~YAML.gsub(/<%%/, '<%')
       default: &default
         adapter: postgresql
         encoding: unicode
