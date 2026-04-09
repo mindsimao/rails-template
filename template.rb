@@ -18,37 +18,6 @@ after_bundle do
   rails_command "turbo:install"
   rails_command "stimulus:install"
   rails_command "importmap:install"
-  
-  # Copy configuration files
-  create_file ".rubocop.yml", <<~YAML
-    require:
-      - rubocop-rails-omakase
-    
-    AllCops:
-      NewCops: enable
-      TargetRubyVersion: 3.3
-      Exclude:
-        - 'node_modules/**/*'
-        - 'vendor/**/*'
-        - 'db/schema.rb'
-  YAML
-
-  create_file "config/bundler-audit.yml", <<~YAML
-    # Ignore list for bundler-audit
-    # Format:
-    # - CVE-YYYY-NNNNN
-  YAML
-
-  create_file "config/recurring.yml", <<~YAML
-    # Recurring jobs configuration for Solid Queue
-    # 
-    # Example:
-    # cleanup_job:
-    #   class: CleanupJob
-    #   schedule: every day at 3am
-    #   queue: maintenance
-    #   args: []
-  YAML
 
   # Create docs directory with style guides
   directory_path = "docs"
